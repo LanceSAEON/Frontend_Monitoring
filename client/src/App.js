@@ -38,8 +38,8 @@ function App() {
             <Switch>
               {/* Private Routes (Requires auth/account) */}
               <PrivateRoute exact path="/" component={Dashboard} />
-              {/* <PrivateRoute exact path="/:category" component={Dashboard} /> */}
-              <PrivateRoute exact path="/update-profile" component={UpdateProfile}/ >
+              <PrivateRoute exact path="/dashboard/:category" component={Dashboard} />
+              <PrivateRoute exact path="/update-profile" component={UpdateProfile}/>
 
               {/* Public Routes (No auth needed) */}
               <Route path='/login' component={Login} />

@@ -164,10 +164,10 @@ export default function Dashboard() {
                                     </ListGroup.Item>
                                     <ListGroup.Item bsPrefix=" "className="nav-item" role="presentation">
                                         <NavDropdown title="Categories" id="basic-nav-dropdown">
-                                            <NavDropdown.Item role="presentation" href="clicks">Clicks</NavDropdown.Item>
-                                            <NavDropdown.Item role="presentation" href="downloads">Downloads</NavDropdown.Item>
-                                            <NavDropdown.Item role="presentation" href="mousemoves">Mouse Move</NavDropdown.Item>
-                                            <NavDropdown.Item role="presentation" href="queries">Query</NavDropdown.Item>
+                                            <NavDropdown.Item role="presentation" href="/dashboard/clicks">Clicks</NavDropdown.Item>
+                                            <NavDropdown.Item role="presentation" href="/dashboard/downloads">Downloads</NavDropdown.Item>
+                                            <NavDropdown.Item role="presentation" href="/dashboard/mousemoves">Mouse Move</NavDropdown.Item>
+                                            <NavDropdown.Item role="presentation" href="/dashboard/queries">Query</NavDropdown.Item>
                                         </NavDropdown>
                                     </ListGroup.Item>
                                 </ListGroup>
