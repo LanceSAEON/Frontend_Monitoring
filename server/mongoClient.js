@@ -1,158 +1,35 @@
 const { MongoClient } = require('mongodb');
-const fs = require('fs');
-var settings = require("./settings");
+var settings = require("./config/settings");
+var pipelines = require('./db/pipelines');
 
-async function init(){
-    const uri = settings.MONGO_URI;
-    return new MongoClient(uri);
+async function retrieveRecs(query) {
+    client = await new MongoClient(settings.MONGO_URI).connect();
+
+    try {
+            
+        return await client.db("catalogue")
+                            .collection("logs")
+                            .aggregate(query, { "allowDiskUse" : true })
+                            .limit(30)
+                            .toArray()
+    }
+    finally{ await client.close(); }
 }
 
 module.exports = {
     logPipeline: async function () {
-        var client = await init();
-        await client.connect();
-
-        try {
-            const pipeline = [
-                {
-                    '$project': { 
-                        'clientSession': 1,
-                        'clientInfo': 1,
-                        'type': 1,
-                        'createdAt': 1,
-                        'info':1
-                    }
-                }, {
-                    '$sort': { 'clientSession': 1 }
-                }];
-                
-            return await client.db("catalogue")
-                               .collection("logs")
-                               .aggregate(pipeline, { "allowDiskUse" : true })
-                               .limit(30)
-                               .toArray()
-                               .then((data) => { return JSON.stringify(data) });
-        }
-        finally{ await client.close(); }
+        return await retrieveRecs(pipelines.getAllLogs);//.then((d) => { return JSON.stringify(d) });
     },
     logPipelineClick: async function () {
-        var client = await init();
-        await client.connect();
-
-        try {
-            const pipeline = [
-                {
-                    '$project': { 
-                        'clientSession': 1,
-                        'clientInfo': 1,
-                        'type': 1,
-                        'createdAt': 1,
-                        'info':1
-                    }
-                }, {
-                    '$sort': { 'clientSession': 1 }
-                }, { 
-                    '$match': { 'type': 'click' } 
-                }];
-                
-            // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#aggregate for the aggregate() docs
-            return await client.db("catalogue")
-                               .collection("logs")
-                               .aggregate(pipeline, { "allowDiskUse" : true })
-                               .limit(30)
-                               .toArray()
-                               .then((data) => { return JSON.stringify(data) });
-        }
-        finally{ await client.close(); }
+        return await retrieveRecs(pipelines.clickLogs);//.then((d) => { return JSON.stringify(d) });
     },
     logPipelineDownload: async function () {
-        var client = await init();
-        await client.connect();
-
-        try {
-            const pipeline = [
-                {
-                    '$project': { 
-                        'clientSession': 1,
-                        'clientInfo': 1,
-                        'type': 1,
-                        'createdAt': 1,
-                        'info':1
-                    }
-                }, {
-                    '$sort': { 'clientSession': 1 }
-                }, { 
-                    '$match': { 'type': 'download' } 
-                }];
-                
-            // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#aggregate for the aggregate() docs
-            return await client.db("catalogue")
-                               .collection("logs")
-                               .aggregate(pipeline, { "allowDiskUse" : true })
-                               .limit(30)
-                               .toArray()
-                               .then((data) => { return JSON.stringify(data) });
-        }
-        finally{ await client.close(); }
+        return await retrieveRecs(pipelines.downloadLogs);//.then((d) => { return JSON.stringify(d) });
     },
     logPipelineMouseMove: async function () {
-        var client = await init();
-        await client.connect();
-
-        try {
-            const pipeline = [
-                {
-                    '$project': { 
-                        'clientSession': 1,
-                        'clientInfo': 1,
-                        'type': 1,
-                        'createdAt': 1,
-                        'info':1
-                    }
-                }, {
-                    '$sort': { 'clientSession': 1 }
-                }, { 
-                    '$match': { 'type': 'mousemove' } 
-                }];
-                
-            // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#aggregate for the aggregate() docs
-            return await client.db("catalogue")
-                               .collection("logs")
-                               .aggregate(pipeline, { "allowDiskUse" : true })
-                               .limit(30)
-                               .toArray()
-                               .then((data) => { return JSON.stringify(data) });
-        }
-        finally{ await client.close(); }
+        return await retrieveRecs(pipelines.mouseMoveLogs);//.then((d) => { return JSON.stringify(d) });
     },
     logPipelineQuery: async function () {
-        var client = await init();
-        await client.connect();
-
-        try {
-            const pipeline = [
-                {
-                    '$project': { 
-                        'clientSession': 1,
-                        'clientInfo': 1,
-                        'type': 1,
-                        'createdAt': 1,
-                        'info':1
-                    }
-                }, {
-                    '$sort': { 'clientSession': 1 }
-                }, { 
-                    '$match': { 'type': 'query' } 
-                }];
-                
-            // See https://mongodb.github.io/node-mongodb-native/3.6/api/Collection.html#aggregate for the aggregate() docs
-            return await client.db("catalogue")
-                               .collection("logs")
-                               .aggregate(pipeline, { "allowDiskUse" : true })
-                               .limit(30)
-                               .toArray()
-                               .then((data) => { return JSON.stringify(data) });
-        }
-        finally{ await client.close(); }
+        return await retrieveRecs(pipelines.queryLogs);//.then((d) => { return JSON.stringify(d) });
     }
   };
